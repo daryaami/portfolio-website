@@ -28,6 +28,8 @@ export type SiteConfig = {
   /** Feature flags — включайте разделы без удаления кода */
   features: {
     articles: boolean;
+    /** Сколько проектов показывать на главной; null = все */
+    projectsVisible: number | null;
   };
   nav: NavItem[];
 };

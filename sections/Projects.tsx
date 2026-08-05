@@ -5,8 +5,14 @@ import { FadeIn } from "@/components/FadeIn";
 import { ProjectCover } from "@/components/ProjectCover";
 import { SectionHeading } from "@/components/SectionHeading";
 import { projects } from "@/data/projects";
+import { siteConfig } from "@/data/site";
 
 export function Projects() {
+  const limit = siteConfig.features.projectsVisible;
+  const visibleProjects =
+    limit === null ? projects : projects.slice(0, limit);
+  const hiddenCount = projects.length - visibleProjects.length;
+
   return (
     <section id="projects" className="scroll-mt-20 py-20 sm:py-24">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
@@ -17,7 +23,7 @@ export function Projects() {
         />
 
         <div className="grid gap-8 md:grid-cols-2">
-          {projects.map((project, index) => (
+          {visibleProjects.map((project, index) => (
             <FadeIn key={project.slug} delay={index * 0.05}>
               <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-white transition-shadow hover:shadow-md">
                 <Link
@@ -70,6 +76,15 @@ export function Projects() {
             </FadeIn>
           ))}
         </div>
+
+        {hiddenCount > 0 ? (
+          <FadeIn className="mt-12 text-center">
+            <p className="text-sm text-foreground-muted">
+              В портфолио есть ещё проекты по Computer Vision и Edge AI —
+              раздел дополняется.
+            </p>
+          </FadeIn>
+        ) : null}
       </div>
     </section>
   );

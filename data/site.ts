@@ -19,8 +19,10 @@ export const siteConfig: SiteConfig = {
   },
   // Статьи спрятаны, пока нет реальных материалов. Включить: features.articles = true
   // и добавить пункт { label: "Статьи", href: "/#articles" } в nav.
+  // Проекты: null = показывать все.
   features: {
     articles: false,
+    projectsVisible: 2,
   },
   nav: [
     { label: "Обо мне", href: "/#about" },
