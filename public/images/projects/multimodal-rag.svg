@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" fill="none">
+  <rect width="1200" height="750" fill="#F8FAFC"/>
+  <defs>
+    <pattern id="g" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" stroke="#E2E8F0" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="750" fill="url(#g)"/>
+  <rect x="180" y="140" width="200" height="72" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+  <text x="280" y="184" text-anchor="middle" fill="#0F172A" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="600">PDF</text>
+  <path d="M380 176h80" stroke="#64748B" stroke-width="2" marker-end="url(#a)"/>
+  <rect x="460" y="140" width="220" height="72" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+  <text x="570" y="184" text-anchor="middle" fill="#0F172A" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">Embeddings</text>
+  <path d="M680 176h80" stroke="#64748B" stroke-width="2"/>
+  <rect x="760" y="140" width="240" height="72" rx="12" fill="#2563EB"/>
+  <text x="880" y="184" text-anchor="middle" fill="#FFFFFF" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">Qdrant + RAG</text>
+  <rect x="260" y="320" width="680" height="280" rx="20" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+  <circle cx="380" cy="460" r="40" fill="#2563EB" fill-opacity="0.15" stroke="#2563EB" stroke-width="2"/>
+  <circle cx="520" cy="420" r="28" fill="#10B981" fill-opacity="0.15" stroke="#10B981" stroke-width="2"/>
+  <circle cx="640" cy="500" r="34" fill="#2563EB" fill-opacity="0.1" stroke="#2563EB" stroke-width="2"/>
+  <circle cx="760" cy="440" r="46" fill="#10B981" fill-opacity="0.12" stroke="#10B981" stroke-width="2"/>
+  <text x="600" y="660" text-anchor="middle" fill="#64748B" font-family="ui-sans-serif, system-ui, sans-serif" font-size="24">Multimodal RAG</text>
+</svg>
