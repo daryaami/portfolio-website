@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
   cvUrl: "/cv.pdf",
   diplomaUrl: "https://diploma.itmo.ru/docs/19C88D5BBD026D5CB5B12B46E3558EF9",
   telegramHandle: "@daryaamii",
-  url: "https://github.com/daryaami",
+  url: "https://portfolio-website-delta-puce-31.vercel.app",
   socials: {
     github: "https://github.com/daryaami",
     telegram: "https://t.me/daryaamii",
