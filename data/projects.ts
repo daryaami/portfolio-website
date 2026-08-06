@@ -151,7 +151,7 @@ export const projects: Project[] = [
     shortDescription:
       "Модуль подсчёта входов и выходов по видеопотоку: YOLOv8 на RKNN NPU, ByteTrack и ROI-зоны с API и GUI для настройки.",
     cardHighlight:
-      "Собрала CV-модуль YOLOv8+ByteTrack на RKNN → 15 FPS и Counting Accuracy 92.16%",
+      "Собрала CV-модуль YOLOv8+ByteTrack на RKNN → 15 FPS",
     cardMetric: { label: "Counting Accuracy", value: "92.16%" },
     role: "ML Engineer. Инференс на RKNN, трекинг, ROI-подсчёт, API и GUI для редактирования зон.",
     problem:
@@ -218,7 +218,7 @@ export const projects: Project[] = [
     shortDescription:
       "Система идентификации сотрудников по изображениям лиц на основе embedding-моделей.",
     cardHighlight:
-      "Распознавание лиц на ArcFace -> устойчивый Face ID на маленьком разрешении",
+      "Улучшила модуль распознавания лиц на ArcFace → устойчивый Face ID на маленьком разрешении",
     role: "ML Engineer. Переработка пайплайна распознавания лиц: выбор embedding-модели, matching-логика, база представлений и human-in-the-loop feedback.",
     problem:
       "Необходимо было автоматически определять сотрудников на смене по изображениям лиц.\n\nИсходный модуль на базе FaceNet (InceptionResnetV1, VGGFace2) часто путал похожих сотрудников из-за маленького количества фотографий в базе.\n\nЯ проанализировала причины ошибок и переработала pipeline распознавания вокруг более устойчивых face embeddings.",
@@ -281,18 +281,18 @@ export const projects: Project[] = [
     title: "Классификация вторсырья на Edge-устройстве",
     category: "Computer Vision / Edge AI",
     shortDescription:
-      "Детекция и классификация на Raspberry Pi для аппарата приёма вторсырья: aluminium, plastic и класс N для всего остального.",
+      "Система детекции и классификации объектов на Raspberry Pi: пластиковые бутылки, алюминиевые банки и нецелевые предметы.",
     cardHighlight:
-      "Детектор YOLO на ~7000 фото + TFLite → aluminium / plastic / N при Accuracy 92.63%",
+      "YOLO-детектор на ~7000 фото + TFLite → aluminium / plastic / N",
     cardMetric: { label: "Accuracy", value: "92.63%" },
-    role: "ML Engineer. Ручная разметка, обучение детектора, квантование и TFLite-инференс под лимит времени на кадр.",
+    role: "ML Engineer. Подготовка датасета, обучение детектора, квантование и TFLite-инференс под ограничение времени на кадр.",
     problem:
-      "Аппарат принимает пластиковые бутылки и алюминиевые банки. По фото с камеры на Raspberry Pi нужно ответить: aluminium, plastic или N (не целевой предмет). Есть жёсткий лимит времени на один кадр — поэтому модель обязана быть лёгкой.\n\nЗадача снаружи казалась простой классификацией, но главный подводный камень — open-set: научить лёгкую модель отличать целевые объекты от любого другого предмета в мире. Плюс требование отбрасывать кадры, где предметов больше одного — даже если оба целевые.",
+      "По изображению с камеры аппарата необходимо определить тип объекта: aluminium, plastic или N (нецелевой предмет). Инференс выполняется на Raspberry Pi с ограничением по времени обработки одного кадра.\n\nДополнительное требование — отбрасывать кадры с более чем одним объектом. Основная сложность задачи — open-set классификация: отличать целевые классы от произвольных предметов.",
     solutionSteps: [
       "Фото с камеры",
-      "YOLO detector (multi-class)",
+      "YOLO detector",
       "Reject if >1 object",
-      "Map to alu / plastic / N",
+      "aluminium / plastic / N",
       "TFLite on Raspberry Pi",
     ],
     technologies: [
@@ -305,38 +305,31 @@ export const projects: Project[] = [
     ],
     decisions: [
       {
-        title: "Датасет ~7000 с ручной разметкой",
-        body: "Сама разметила базовый набор, затем расширила открытыми данными и негативами (стекло, бумага, спреи), чтобы модель реже путала их с plastic/aluminium.",
+        title: "Датасет ~7000 изображений",
+        body: "Базовый набор размечен вручную и расширен открытыми данными. Добавлены негативные классы (стекло, бумага, спреи), чтобы снизить ложные срабатывания на похожих предметах.",
       },
       {
-        title: "Детектор, не чистый классификатор",
-        body: "Обучала YOLO-детектор на нескольких классах и уже после детекции схлопывала ответ в aluminium / plastic / N — так можно отсечь кадры с >1 объектом.",
+        title: "Детектор вместо чистой классификации",
+        body: "Обучен YOLO-детектор с последующим сведением ответа к aluminium / plastic / N. Такой подход позволяет отсекать кадры с несколькими объектами.",
       },
       {
-        title: "TFLite под лимит latency",
-        body: "Брала лёгкие YOLO, квантовала и переводила в TFLite: узкое место было не «FPS видео», а уложиться во время на одно фото.",
-      },
-      {
-        title: "Что не сработало",
-        body: "Metric learning, triplet loss и другие схемы не дали прироста на неожиданных предметах (ножницы уходили в aluminium). Осталась на YOLO; N по-прежнему самый слабый класс — это честно видно в recall и ROC.",
+        title: "Оптимизация под Raspberry Pi",
+        body: "Использованы лёгкие YOLO-модели, квантование и экспорт в TFLite, чтобы укладываться в лимит времени на одно изображение.",
       },
     ],
     results: [
       { label: "Accuracy", value: "92.63%" },
-      { label: "Aluminium AUC", value: "0.979" },
-      { label: "Plastic AUC", value: "0.955" },
-      { label: "Unknown AUC", value: "0.796" },
       {
         label: "Aluminium",
-        value: "Precision 92.52% · Recall 99.70% · F1 95.98%",
+        value: "Precision 92.52% · Recall 99.70% · F1 95.98% · AUC 0.979",
       },
       {
         label: "Plastic",
-        value: "Precision 91.95% · Recall 98.88% · F1 95.29%",
+        value: "Precision 91.95% · Recall 98.88% · F1 95.29% · AUC 0.955",
       },
       {
         label: "N (unknown)",
-        value: "Precision 96.34% · Recall 58.52% · F1 72.81%",
+        value: "Precision 96.34% · Recall 58.52% · F1 72.81% · AUC 0.796",
       },
     ],
     resultFigures: [
@@ -344,12 +337,12 @@ export const projects: Project[] = [
         src: "/images/projects/recycling-roc-auc.png",
         alt: "ROC-кривые one-vs-rest для классов aluminium, plastic и unknown",
         caption:
-          "ROC (one-vs-rest): aluminium AUC 0.979, plastic AUC 0.955, N AUC 0.796 — целевые классы сильные, open-set остаётся узким местом.",
+          "ROC (one-vs-rest): aluminium AUC 0.979, plastic AUC 0.955, N AUC 0.796. Класс N заметно слабее целевых.",
       },
     ],
     conclusions: [
-      "Open-set на Edge оказался сложнее «просто обучить YOLO»: aluminium/plastic держатся хорошо, а произвольный мусор всё ещё пробивает пороги.",
-      "Имеет смысл заранее закладывать детекцию под правило «один объект в кадре» и копить жёсткие негативы — одними порогами уверенности это не закрывается.",
+      "Целевые классы aluminium и plastic показывают высокое качество; основной bottleneck — класс N в open-set постановке.",
+      "Альтернативные подходы (metric learning, triplet loss) не дали устойчивого прироста на неожиданных объектах; финальное решение осталось на YOLO с расширенным негативным набором.",
     ],
     coverImage: "/images/projects/recycling-classification.svg",
     featured: true,
@@ -406,31 +399,4 @@ export function getProjectBySlug(slug: string): Project | undefined {
 
 export function getProjectSlugs(): string[] {
   return projects.map((project) => project.slug);
-}
-
-/** Короткие числовые метрики для strip на странице кейса (до 4). */
-export function getHighlightMetrics(
-  results: Project["results"],
-  limit = 4,
-): Project["results"] {
-  const scored = results
-    .map((result) => {
-      const value = result.value.trim();
-      const isCompact =
-        /^[\d.,]+\s*%$/.test(value) ||
-        /^[\d.,]+$/.test(value) ||
-        /^\d+(\.\d+)?\s*(FPS|fps)/i.test(value) ||
-        /^\d+\s+при\b/i.test(value) ||
-        /^~?[\d.,]+\s*(с|ms|мс)/i.test(value);
-      const hasNumber = /\d/.test(value);
-      const shortEnough = value.length <= 28;
-      return {
-        result,
-        score: isCompact ? 3 : hasNumber && shortEnough ? 2 : hasNumber ? 1 : 0,
-      };
-    })
-    .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score);
-
-  return scored.slice(0, limit).map((item) => item.result);
 }

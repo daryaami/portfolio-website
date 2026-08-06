@@ -10,7 +10,6 @@ import { CardHighlight } from "@/components/CardHighlight";
 import { FadeIn } from "@/components/FadeIn";
 import { ProjectCover } from "@/components/ProjectCover";
 import {
-  getHighlightMetrics,
   getProjectBySlug,
   getProjectSlugs,
   projects,
@@ -84,11 +83,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       ? navProjects[currentIndex + 1]
       : null;
 
-  const highlightMetrics = getHighlightMetrics(project.results);
-  const detailResults = project.results.filter(
-    (result) => !highlightMetrics.some((metric) => metric.label === result.label),
-  );
-
   return (
     <article className="pb-20">
       <div className="border-b border-border bg-background-secondary">
@@ -145,26 +139,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </FadeIn>
 
-        {highlightMetrics.length > 0 ? (
-          <FadeIn className="mt-8">
-            <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {highlightMetrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  className="rounded-xl border border-border bg-white px-5 py-4"
-                >
-                  <dt className="text-xs font-medium tracking-wide text-foreground-muted uppercase">
-                    {metric.label}
-                  </dt>
-                  <dd className="mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                    {metric.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </FadeIn>
-        ) : null}
-
         <div className="mx-auto mt-12 max-w-3xl space-y-2">
           <SectionBlock title="Проблема">
             <div className="space-y-4">
@@ -220,9 +194,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </SectionBlock>
 
           <SectionBlock title="Результаты">
-            {detailResults.length > 0 ? (
+            {project.results.length > 0 ? (
               <dl className="grid gap-4 sm:grid-cols-2">
-                {detailResults.map((result) => (
+                {project.results.map((result) => (
                   <div
                     key={result.label}
                     className="rounded-lg border border-border bg-background-secondary p-4"
@@ -241,7 +215,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {project.resultFigures && project.resultFigures.length > 0 ? (
               <div
                 className={
-                  detailResults.length > 0 ? "mt-8 space-y-8" : "space-y-8"
+                  project.results.length > 0 ? "mt-8 space-y-8" : "space-y-8"
                 }
               >
                 {project.resultFigures.map((figure) => (
@@ -264,14 +238,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   </figure>
                 ))}
               </div>
-            ) : null}
-
-            {detailResults.length === 0 &&
-            (!project.resultFigures || project.resultFigures.length === 0) &&
-            highlightMetrics.length > 0 ? (
-              <p className="text-sm leading-relaxed text-foreground-muted">
-                Числовые метрики вынесены в начало страницы.
-              </p>
             ) : null}
           </SectionBlock>
 
