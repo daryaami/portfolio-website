@@ -139,7 +139,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </FadeIn>
 
-        <div className="mx-auto mt-12 max-w-3xl space-y-2">
+        <div className="mx-auto mt-12 max-w-3xl space-y-10">
           <SectionBlock title="Проблема">
             <div className="space-y-4">
               {project.problem.split(/\n\n+/).map((paragraph) => (
