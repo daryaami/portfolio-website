@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
+import { CardHighlight } from "@/components/CardHighlight";
 import { FadeIn } from "@/components/FadeIn";
 import { ProjectCover } from "@/components/ProjectCover";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -48,9 +49,17 @@ export function Projects() {
                       {project.title}
                     </Link>
                   </h3>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-foreground-muted">
-                    {project.shortDescription}
-                  </p>
+                  <CardHighlight
+                    text={project.cardHighlight}
+                    className="mt-3 flex-1"
+                  />
+                  {project.cardMetric ? (
+                    <p className="mt-2">
+                      <Badge tone="success">
+                        {project.cardMetric.label}: {project.cardMetric.value}
+                      </Badge>
+                    </p>
+                  ) : null}
                   <div className="mt-4 flex flex-wrap gap-2">
                     {project.technologies.slice(0, 5).map((tech) => (
                       <Badge key={tech}>{tech}</Badge>
@@ -80,8 +89,7 @@ export function Projects() {
         {hiddenCount > 0 ? (
           <FadeIn className="mt-12 text-center">
             <p className="text-sm text-foreground-muted">
-              В портфолио есть ещё проекты по Computer Vision и Edge AI —
-              раздел дополняется.
+              Раздел дополняется — скоро появятся новые кейсы.
             </p>
           </FadeIn>
         ) : null}

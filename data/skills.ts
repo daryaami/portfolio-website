@@ -14,7 +14,7 @@ export const skillCategories: SkillCategory[] = [
     items: ["Transformers", "RAG", "Embeddings", "Vector Search"],
   },
   {
-    title: "Разработка сервисов и базы данных",
+    title: "Разработка ML-приложений",
     items: ["FastAPI", "Django REST Framework", "PostgreSQL", "SQL", "Redis"],
   },
   {

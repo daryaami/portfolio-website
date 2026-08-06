@@ -27,8 +27,9 @@ export function Hero() {
             {siteConfig.tagline}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button href={siteConfig.cvUrl} external>
-              Скачать CV
+            <Button href="/#projects">
+              Смотреть проекты
+              <span aria-hidden>→</span>
             </Button>
             <Button href={siteConfig.socials.github} variant="secondary" external>
               GitHub

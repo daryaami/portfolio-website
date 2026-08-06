@@ -9,7 +9,7 @@ export default function NotFound() {
         Страница не найдена
       </h1>
       <p className="mt-3 max-w-md text-foreground-muted">
-        Возможно, ссылка устарела или проект ещё не опубликован.
+        Возможно, ссылка устарела или проект еще не опубликован.
       </p>
       <div className="mt-8">
         <Button href="/">На главную</Button>

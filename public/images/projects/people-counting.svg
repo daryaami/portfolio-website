@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" fill="none">
+  <rect width="1200" height="750" fill="#F8FAFC"/>
+  <defs>
+    <pattern id="pc-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" stroke="#E2E8F0" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="750" fill="url(#pc-grid)"/>
+  <rect x="80" y="160" width="160" height="64" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+  <text x="160" y="200" text-anchor="middle" fill="#0F172A" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600">Video</text>
+  <path d="M240 192h40" stroke="#64748B" stroke-width="2"/>
+  <rect x="280" y="160" width="160" height="64" rx="12" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
+  <text x="360" y="200" text-anchor="middle" fill="#0F172A" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600">YOLOv8</text>
+  <path d="M440 192h40" stroke="#64748B" stroke-width="2"/>
+  <rect x="480" y="160" width="160" height="64" rx="12" fill="#2563EB"/>
+  <text x="560" y="200" text-anchor="middle" fill="#FFFFFF" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600">RKNN NPU</text>
+  <path d="M640 192h40" stroke="#64748B" stroke-width="2"/>
+  <rect x="680" y="160" width="180" height="64" rx="12" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+  <text x="770" y="200" text-anchor="middle" fill="#0F172A" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600">ByteTrack</text>
+  <path d="M860 192h40" stroke="#64748B" stroke-width="2"/>
+  <rect x="900" y="160" width="200" height="64" rx="12" fill="#FFFFFF" stroke="#10B981" stroke-width="2"/>
+  <text x="1000" y="200" text-anchor="middle" fill="#0F172A" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600">Enter / Exit</text>
+  <rect x="280" y="320" width="640" height="260" rx="20" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+  <rect x="340" y="380" width="200" height="140" rx="12" fill="#2563EB" fill-opacity="0.08" stroke="#2563EB" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="440" y="460" text-anchor="middle" fill="#2563EB" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">ROI IN</text>
+  <rect x="660" y="380" width="200" height="140" rx="12" fill="#10B981" fill-opacity="0.08" stroke="#10B981" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="760" y="460" text-anchor="middle" fill="#10B981" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="600">ROI OUT</text>
+  <text x="600" y="660" text-anchor="middle" fill="#64748B" font-family="ui-sans-serif, system-ui, sans-serif" font-size="24">People Counting - Edge AI</text>
+</svg>

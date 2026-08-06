@@ -5,7 +5,7 @@ export const siteConfig: SiteConfig = {
   role: "ML Engineer",
   specialization: ["Computer Vision", "LLM", "RAG", "Deep Learning"],
   tagline:
-    "Разрабатываю интеллектуальные системы: от обучения моделей до создания production-сервисов.",
+    "Разрабатываю прикладные ML-системы: от обучения моделей до интеграции в программные решения.",
   about:
     "Разрабатываю системы компьютерного зрения, LLM-приложения и RAG-пайплайны. Работаю с полным циклом ML-разработки: подготовка данных, обучение моделей, оптимизация и интеграция ML-решений в прикладные системы.",
   email: "daryaami10@gmail.com",
@@ -19,10 +19,10 @@ export const siteConfig: SiteConfig = {
   },
   // Статьи спрятаны, пока нет реальных материалов. Включить: features.articles = true
   // и добавить пункт { label: "Статьи", href: "/#articles" } в nav.
-  // Проекты: null = показывать все.
+  // Проекты: null = показывать все. Сейчас 5 готовых кейсов; antifraud скрыт.
   features: {
     articles: false,
-    projectsVisible: 2,
+    projectsVisible: 5,
   },
   nav: [
     { label: "Обо мне", href: "/#about" },

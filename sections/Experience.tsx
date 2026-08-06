@@ -9,7 +9,7 @@ export function Experience() {
         <SectionHeading
           eyebrow="Опыт"
           title="Путь в ML"
-          description="Образование, практика и работа над прикладными ML-системами."
+          description="Образование и карьера."
         />
         <FadeIn className="mx-auto max-w-2xl">
           <ol className="relative border-l border-border pl-8">

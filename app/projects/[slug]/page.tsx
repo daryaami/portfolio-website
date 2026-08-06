@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
 import { Badge } from "@/components/Badge";
 import { Button } from "@/components/Button";
+import { CardHighlight } from "@/components/CardHighlight";
 import { FadeIn } from "@/components/FadeIn";
 import { ProjectCover } from "@/components/ProjectCover";
-import { getProjectBySlug, getProjectSlugs, projects } from "@/data/projects";
+import {
+  getHighlightMetrics,
+  getProjectBySlug,
+  getProjectSlugs,
+  projects,
+} from "@/data/projects";
+import { siteConfig } from "@/data/site";
 
 type ProjectPageProps = PageProps<"/projects/[slug]">;
 
@@ -39,12 +47,14 @@ export async function generateMetadata({
 function SectionBlock({
   title,
   children,
+  className = "",
 }: {
   title: string;
   children: ReactNode;
+  className?: string;
 }) {
   return (
-    <section className="border-t border-border pt-10">
+    <section className={`border-t border-border pt-10 ${className}`}>
       <h2 className="text-2xl font-semibold tracking-tight text-foreground">
         {title}
       </h2>
@@ -61,10 +71,23 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
-  const currentIndex = projects.findIndex((item) => item.slug === slug);
-  const prev = currentIndex > 0 ? projects[currentIndex - 1] : null;
+  const visibleLimit = siteConfig.features.projectsVisible;
+  const navProjects =
+    visibleLimit === null
+      ? projects.filter((item) => item.featured)
+      : projects.slice(0, visibleLimit);
+
+  const currentIndex = navProjects.findIndex((item) => item.slug === slug);
+  const prev = currentIndex > 0 ? navProjects[currentIndex - 1] : null;
   const next =
-    currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null;
+    currentIndex >= 0 && currentIndex < navProjects.length - 1
+      ? navProjects[currentIndex + 1]
+      : null;
+
+  const highlightMetrics = getHighlightMetrics(project.results);
+  const detailResults = project.results.filter(
+    (result) => !highlightMetrics.some((metric) => metric.label === result.label),
+  );
 
   return (
     <article className="pb-20">
@@ -83,8 +106,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <h1 className="mt-3 max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
               {project.title}
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-foreground-muted sm:text-lg">
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-foreground-muted sm:text-lg">
               {project.shortDescription}
+            </p>
+            <CardHighlight
+              text={project.cardHighlight}
+              className="mt-5 max-w-2xl"
+            />
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-foreground-muted">
+              <span className="font-medium text-foreground">Роль: </span>
+              {project.role}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               {project.githubUrl ? (
@@ -114,24 +145,41 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </FadeIn>
 
-        <div className="mx-auto mt-12 max-w-3xl space-y-10">
-          <SectionBlock title="Обзор">
-            <p className="leading-relaxed text-foreground-muted">
-              {project.shortDescription}
-            </p>
-            <p className="mt-4 leading-relaxed text-foreground-muted">
-              <span className="font-medium text-foreground">Роль: </span>
-              {project.role}
-            </p>
-          </SectionBlock>
+        {highlightMetrics.length > 0 ? (
+          <FadeIn className="mt-8">
+            <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {highlightMetrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="rounded-xl border border-border bg-white px-5 py-4"
+                >
+                  <dt className="text-xs font-medium tracking-wide text-foreground-muted uppercase">
+                    {metric.label}
+                  </dt>
+                  <dd className="mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                    {metric.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </FadeIn>
+        ) : null}
 
+        <div className="mx-auto mt-12 max-w-3xl space-y-2">
           <SectionBlock title="Проблема">
-            <p className="leading-relaxed text-foreground-muted">
-              {project.problem}
-            </p>
+            <div className="space-y-4">
+              {project.problem.split(/\n\n+/).map((paragraph) => (
+                <p
+                  key={paragraph.slice(0, 48)}
+                  className="text-base leading-relaxed text-foreground-muted sm:text-lg"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
           </SectionBlock>
 
-          <SectionBlock title="Архитектура">
+          <SectionBlock title="Как устроено">
             <ArchitectureDiagram steps={project.solutionSteps} />
             {project.architecture ? (
               <div className="mt-10 grid gap-6 sm:grid-cols-2">
@@ -143,7 +191,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                       </h3>
                       <ul className="mt-3 space-y-1.5 text-sm text-foreground-muted">
                         {values.map((value) => (
-                          <li key={value}>• {value}</li>
+                          <li key={value}>{value}</li>
                         ))}
                       </ul>
                     </div>
@@ -153,76 +201,102 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             ) : null}
           </SectionBlock>
 
-          <SectionBlock title="Использованные технологии">
-            <div className="flex flex-wrap gap-2">
-              {project.technologies.map((tech) => (
-                <Badge key={tech} tone="accent">
-                  {tech}
-                </Badge>
+          <SectionBlock title="Инженерные решения">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {project.decisions.map((decision) => (
+                <div
+                  key={decision.title}
+                  className="rounded-xl border border-border bg-white p-5"
+                >
+                  <h3 className="text-base font-semibold tracking-tight text-foreground">
+                    {decision.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground-muted">
+                    {decision.body}
+                  </p>
+                </div>
               ))}
             </div>
           </SectionBlock>
 
-          {project.challenges && project.challenges.length > 0 ? (
-            <SectionBlock title="Инженерные сложности">
-              <ul className="space-y-3">
-                {project.challenges.map((item) => (
-                  <li
-                    key={item}
-                    className="leading-relaxed text-foreground-muted"
-                  >
-                    • {item}
-                  </li>
-                ))}
-              </ul>
-            </SectionBlock>
-          ) : null}
-
-          <SectionBlock title="Реализация">
-            <ul className="space-y-3">
-              {project.implementation.map((item) => (
-                <li
-                  key={item}
-                  className="leading-relaxed text-foreground-muted"
-                >
-                  • {item}
-                </li>
-              ))}
-            </ul>
-          </SectionBlock>
-
           <SectionBlock title="Результаты">
-            <dl className="grid gap-4 sm:grid-cols-3">
-              {project.results.map((result) => (
-                <div
-                  key={result.label}
-                  className="rounded-lg border border-border bg-background-secondary p-4"
-                >
-                  <dt className="text-xs font-medium tracking-wide text-success uppercase">
-                    {result.label}
-                  </dt>
-                  <dd className="mt-2 text-sm leading-relaxed text-foreground">
-                    {result.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {detailResults.length > 0 ? (
+              <dl className="grid gap-4 sm:grid-cols-2">
+                {detailResults.map((result) => (
+                  <div
+                    key={result.label}
+                    className="rounded-lg border border-border bg-background-secondary p-4"
+                  >
+                    <dt className="text-xs font-medium tracking-wide text-success uppercase">
+                      {result.label}
+                    </dt>
+                    <dd className="mt-2 text-sm leading-relaxed text-foreground">
+                      {result.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+
+            {project.resultFigures && project.resultFigures.length > 0 ? (
+              <div
+                className={
+                  detailResults.length > 0 ? "mt-8 space-y-8" : "space-y-8"
+                }
+              >
+                {project.resultFigures.map((figure) => (
+                  <figure key={figure.src}>
+                    <div className="relative overflow-hidden rounded-xl border border-border bg-white">
+                      <Image
+                        src={figure.src}
+                        alt={figure.alt}
+                        width={1200}
+                        height={900}
+                        className="h-auto w-full"
+                        sizes="(max-width: 768px) 100vw, 768px"
+                      />
+                    </div>
+                    {figure.caption ? (
+                      <figcaption className="mt-3 text-sm leading-relaxed text-foreground-muted">
+                        {figure.caption}
+                      </figcaption>
+                    ) : null}
+                  </figure>
+                ))}
+              </div>
+            ) : null}
+
+            {detailResults.length === 0 &&
+            (!project.resultFigures || project.resultFigures.length === 0) &&
+            highlightMetrics.length > 0 ? (
+              <p className="text-sm leading-relaxed text-foreground-muted">
+                Числовые метрики вынесены в начало страницы.
+              </p>
+            ) : null}
           </SectionBlock>
 
           {project.conclusions && project.conclusions.length > 0 ? (
             <SectionBlock title="Выводы">
-              <ul className="space-y-3">
+              <div className="space-y-4">
                 {project.conclusions.map((item) => (
-                  <li
+                  <p
                     key={item}
-                    className="leading-relaxed text-foreground-muted"
+                    className="border-l-2 border-accent/40 pl-4 text-base leading-relaxed text-foreground"
                   >
-                    • {item}
-                  </li>
+                    {item}
+                  </p>
                 ))}
-              </ul>
+              </div>
             </SectionBlock>
           ) : null}
+
+          <SectionBlock title="Стек">
+            <div className="flex flex-wrap gap-2">
+              {project.technologies.map((tech) => (
+                <Badge key={tech}>{tech}</Badge>
+              ))}
+            </div>
+          </SectionBlock>
 
           <nav
             className="flex flex-col gap-4 border-t border-border pt-10 sm:flex-row sm:justify-between"

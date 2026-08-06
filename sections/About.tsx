@@ -9,7 +9,7 @@ const highlights = [
     value: "Computer Vision, Deep Learning, LLM, RAG",
   },
   {
-    label: "Ключевой стек",
+    label: "Стек",
     value: "Python, PyTorch, TensorFlow, OpenCV, Transformers",
   },
   {
